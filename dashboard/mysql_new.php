@@ -57,7 +57,7 @@
                 continue;
             }
             elseif($input[$i]=="" && $a3[$i+1][2]=="YES"){
-                $input[$i]="";
+                $input[$i]=" ";
                 continue;
             }
             elseif($input[$i]==""){
@@ -101,7 +101,7 @@
             
         }
         
-        // echo"$String <hr>$a2";
+        echo"$String <hr>";
         $sql_query="SELECT * FROM $list";
         $result=mysqli_query($db_link,$sql_query);
         if($a2!=0){
