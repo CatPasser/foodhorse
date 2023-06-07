@@ -23,13 +23,19 @@ public class shopping_car_listadarter extends BaseAdapter {
     private String url;
     private Context context;
     private List<String> amount;
+    private List<String> cID;
+    private List<Boolean> ch;
+    private String uID;
 
-    public shopping_car_listadarter(Context context, List<Entuty_Commodity> commodityLiset ,Context context2,List<String> amount)
+    public shopping_car_listadarter(Context context, List<Entuty_Commodity> commodityLiset ,Context context2,List<String> amount,List<String> cID,String uID,List<Boolean> ch)
     {
         mLayInf=(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.commodityLiset = commodityLiset;
         this.context = context2;
         this.amount = amount;
+        this.cID = cID;
+        this.uID = uID;
+        this.ch = ch;
     }
 
     @Override
@@ -59,16 +65,24 @@ public class shopping_car_listadarter extends BaseAdapter {
         final CheckBox checked = (CheckBox) v.findViewById(R.id.checked);
         count.setText(amount.get(i));
 
+        checked.setChecked(ch.get(i));
 
         name.setText(commodityLiset.get(i).getCommodity_name());
         price.setText("$"+commodityLiset.get(i).getCommodity_price());
-
-        CompoundButton.OnCheckedChangeListener ck = new CompoundButton.OnCheckedChangeListener() {
+        checked.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (checked.isChecked())
+                {
+                    ch.set(i,true);
+                }
+                else
+                {
+                    ch.set(i,false);
+                }
                 notifyDataSetChanged();
             }
-        };
+        });
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,11 +102,19 @@ public class shopping_car_listadarter extends BaseAdapter {
                     builder.setMessage("確定要將餐點從購物車刪除嗎");
                     builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
+                        public void onClick(DialogInterface dialogInterface, int i2) {
                             //刪除餐點
+                            String[] field = new String[2];
+                            field[0] = "uID";
+                            field[1] = "cID";
+                            String[] data = new String[2];
+                            data[0] = uID;
+                            data[1] = cID.get(i);
+                            String result = use.getResult("http://20.187.122.219/users/cart/deleteCart.php", field, data);
                             count.setText(Integer.toString(countNumber));
                             commodityLiset.remove(i);
                             amount.remove(i);
+                            ch.remove(i);
                             notifyDataSetChanged();
                         }
                     });
@@ -112,5 +134,25 @@ public class shopping_car_listadarter extends BaseAdapter {
         new use.ImageLoad(imageView,url).execute();
 
         return v;
+    }
+    public void all()
+    {
+        for (int i = 0 ;i<ch.size();i++)
+        {
+            ch.set(i,true);
+        }
+        notifyDataSetChanged();
+    }
+    public void nall()
+    {
+        for (int i = 0 ;i<ch.size();i++)
+        {
+            ch.set(i,false);
+        }
+        notifyDataSetChanged();
+    }
+    public List<Boolean> getCh()
+    {
+        return ch;
     }
 }

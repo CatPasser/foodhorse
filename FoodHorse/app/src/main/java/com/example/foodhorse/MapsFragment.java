@@ -1,5 +1,7 @@
 package com.example.foodhorse;
 
+import static android.app.Activity.RESULT_OK;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -188,7 +190,11 @@ public class MapsFragment extends Fragment implements ClusterManager.OnClusterIt
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         MainActivity mainActivity = (MainActivity) getActivity();
-        mainActivity.OpenDriverOrder();
+        if(resultCode == RESULT_OK)
+        {
+            mainActivity.OpenDriverOrder();
+        }
+        //mainActivity.OpenDriverOrder();
 
     }
 
@@ -208,7 +214,6 @@ public class MapsFragment extends Fragment implements ClusterManager.OnClusterIt
                 }
             }
         }
-
         for (int index = 0; index < address.size(); index++) {
             lat = getLatlng(address.get(index)).get(0);
             lng = getLatlng(address.get(index)).get(1);

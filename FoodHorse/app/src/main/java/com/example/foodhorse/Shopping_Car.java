@@ -39,58 +39,62 @@ public class Shopping_Car extends AppCompatActivity {
         String[] data = new String[1];
         data[0] = Integer.toString(mainApp.getEntuty_user().getID());
         String result = use.getResult("http://20.187.122.219/users/cart/selectCart.php", field, data);
-        String array[] = result.split("&&");//foodname photo price amount cID
+        String array[] = result.split("&&");//foodname photo price amount cID sID
         List<Entuty_Commodity> commodities = new ArrayList<>();
         List<String> amount = new ArrayList<>();
         List<String> cID = new ArrayList<>();
+        List<Boolean> ch = new ArrayList<>();
+        List<String> sID = new ArrayList<>();
         if(!result.equals("No Data")) {
             for (int i2 = 0; i2 < array.length; i2++) {
                 String array2[] = array[i2].split(",");
                 commodities.add(new Entuty_Commodity(array2[0], null, array2[2], null, array2[1]));
                 amount.add(array2[3]);
                 cID.add(array2[4]);
+                sID.add(array2[5]);
+                ch.add(false);
             }
         }
-        mListAdapter = new shopping_car_listadarter(getApplicationContext(),commodities,Shopping_Car.this,amount);
+        mListAdapter = new shopping_car_listadarter(getApplicationContext(),commodities,Shopping_Car.this,amount,cID,Integer.toString(mainApp.getEntuty_user().getID()),ch);
         list_view.setAdapter(mListAdapter);
 
-        CompoundButton.OnCheckedChangeListener ck = new CompoundButton.OnCheckedChangeListener() {
+        checked.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (checked.isChecked())
                 {
-                    for (int i=0;i<mListAdapter.getCount();i++)
-                    {
-                        CheckBox ck = list_view.getChildAt(i).findViewById(R.id.checked);
-                        ck.setChecked(true);
-                        mListAdapter.notifyDataSetChanged();
-                    }
+                    mListAdapter.all();
+                    mListAdapter.notifyDataSetChanged();
                 }
                 else
                 {
-                    for (int i=0;i<mListAdapter.getCount();i++)
-                    {
-                        CheckBox ck = list_view.getChildAt(i).findViewById(R.id.checked);
-                        ck.setChecked(false);
-                        mListAdapter.notifyDataSetChanged();
-                    }
+                    mListAdapter.nall();
+                    mListAdapter.notifyDataSetChanged();
                 }
             }
-        };
+        });
         pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 List<String> ID = new ArrayList<>();
                 List<String> amount = new ArrayList<>();
+                boolean two = false;
+                String  csID="0";
                 int t=0;
                 for(int i =0;i<mListAdapter.getCount();i++)
                 {
-                    CheckBox ck = list_view.getChildAt(i).findViewById(R.id.checked);
-                    if(ck.isChecked())
+                    //CheckBox ck = list_view.getChildAt(i).findViewById(R.id.checked);
+                    List<Boolean> ch = mListAdapter.getCh();
+                    if(ch.get(i))
                     {
+                        if(!csID.equals("0")&&!csID.equals(sID.get(i)))
+                        {
+                            two = true;
+                        }
                         ID.add(cID.get(i));
-                        TextView tv = list_view.getChildAt(i).findViewById(R.id.count);
-                        amount.add(tv.getText().toString());
+                        csID = sID.get(i);
+                        //TextView tv = list_view.getChildAt(i).findViewById(R.id.count);
+                        amount.add("");
                         t++;
                     }
                 }
@@ -110,7 +114,11 @@ public class Shopping_Car extends AppCompatActivity {
                 {
                     intent.putExtra(Integer.toString(i),ID.get(i));
                 }
-                if(t!=0) {
+                if (two)
+                {
+                    Toast.makeText(Shopping_Car.this, "不同店家請分開結帳", Toast.LENGTH_LONG).show();
+                }
+                else if(t!=0) {
                     startActivity(intent);
                     finish();
                 }

@@ -1,9 +1,16 @@
 package com.example.foodhorse;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.widget.TextViewCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -12,10 +19,16 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import org.w3c.dom.Text;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class shopping_checkout extends AppCompatActivity {
 
@@ -29,17 +42,21 @@ public class shopping_checkout extends AppCompatActivity {
     private Button send;
     private List<String> ID = new ArrayList<>();
     private int total=0;
+    FusedLocationProviderClient fusedLocationProviderClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_checkout);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         mainApp = (MainApp) getApplication();
         list_view = (ListView) findViewById(R.id.list_view);
         address = (EditText) findViewById(R.id.address);
         notes = (EditText) findViewById(R.id.notes);
         count = (TextView) findViewById(R.id.count);
         send = (Button) findViewById(R.id.send);
-        address.setText(mainApp.getEntuty_user().getAddress());
+
+        getLastLocation();
+        //address.setText(mainApp.getEntuty_user().getAddress());
         Intent intent = getIntent();
         for(int i=0;i<intent.getIntExtra("amount",0);i++)
         {
@@ -99,5 +116,33 @@ public class shopping_checkout extends AppCompatActivity {
                 finish();
             }
         });
+    }
+    private void getLastLocation(){
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            fusedLocationProviderClient.getLastLocation()
+                    .addOnSuccessListener(new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if(location != null){
+                                Geocoder geocoder = new Geocoder(shopping_checkout.this, Locale.getDefault());
+                                List<Address> addresses = null;
+                                try {
+                                    addresses = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(),1);
+                                    address.setText(addresses.get(0).getAddressLine(0));
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+
+                            }
+                        }
+                    });
+        }
+        else{
+            askPermission();
+        }
+    }
+    private void askPermission(){
+        ActivityCompat.requestPermissions(this, new String[]
+                {Manifest.permission.ACCESS_FINE_LOCATION},100);
     }
 }

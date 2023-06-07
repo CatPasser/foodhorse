@@ -47,7 +47,7 @@ public class ShopInfo extends AppCompatActivity {
     private Entuty_User entuty_user;
 
     private Spinner spinner;
-    private String tagarray[] = {"標籤1","標籤2","標籤3"};
+    private String tagarray[] = {"西式","快餐","中式","台式","小吃","飲料","早餐"};
     private Button update_tag;
     private boolean update = false;
 
@@ -80,14 +80,26 @@ public class ShopInfo extends AppCompatActivity {
         spinner.setAdapter(adapter);
         switch (entuty_user.getTag())
         {
-            case "標籤1":
+            case "西式":
                 spinner.setSelection(0);
                 break;
-            case "標籤2":
+            case "快餐":
                 spinner.setSelection(1);
                 break;
-            case "標籤3":
+            case "中式":
                 spinner.setSelection(2);
+                break;
+            case "台式":
+                spinner.setSelection(3);
+                break;
+            case "小吃":
+                spinner.setSelection(4);
+                break;
+            case "飲料":
+                spinner.setSelection(5);
+                break;
+            case "早餐":
+                spinner.setSelection(6);
                 break;
         }
         update_tag = (Button)findViewById(R.id.updata_tag);

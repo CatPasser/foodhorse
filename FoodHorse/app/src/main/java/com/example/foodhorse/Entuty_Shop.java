@@ -3,7 +3,7 @@ package com.example.foodhorse;
 public class Entuty_Shop {
     private int ID;
     private String name;
-    private  String tag;
+    private String tag;
     private String phone;
     private String address;
     private String photo;

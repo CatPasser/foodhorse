@@ -70,7 +70,7 @@ public class NewCommodity extends AppCompatActivity {
         tag = (EditText) findViewById(R.id.tag);
         price = (EditText) findViewById(R.id.price);
         notes=(EditText) findViewById(R.id.notes);
-        photo.setImageResource(R.drawable.img);
+        //photo.setImageResource(R.drawable.img);
         upLoadServerUri = "http://20.187.122.219/photo/uploadFood.php";
         ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {

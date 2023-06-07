@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             if (result.equals("No Order"))
             {
                 fragmentTransaction = fmgr.beginTransaction();
-                fragmentTransaction.replace(R.id.container, Maps);
+                fragmentTransaction.replace(R.id.container, new MapsFragment());
                 fragmentTransaction.commit();
             }
             else
