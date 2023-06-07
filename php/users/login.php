@@ -24,7 +24,7 @@ if($username != null && $password != null){
 
 if ($login == true) {
    if($row[5] == null){
-   $row[5] = "null";
+   $row[5] = " ";
    }
    echo "Login Success",",",$row[0],",",$row[1],",",json_encode($row[3]),",",$row[4],",",$row[5];
 } else echo "Login Failed\n";
