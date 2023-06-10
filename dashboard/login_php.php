@@ -15,6 +15,7 @@
 	}
 	else{echo "<link href='https://www.google.com/'>";}
 	
+	// require("to_mysql_use.php");
 ?>
 
-<button onclick="document.location.href='./'">登出</button>;
+<button onclick="document.location.href='https://www.google.com/'">登出</button>;

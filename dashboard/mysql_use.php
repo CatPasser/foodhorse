@@ -8,6 +8,7 @@
 
     if($list=="請選擇資料表"){
 		$list=" ";
+        
 	}
     function get_1 ($array_1,$result,$a1){
         $j=count($array_1);
@@ -38,8 +39,6 @@
             $sql_query="SELECT * FROM $list";
             $result=mysqli_query($db_link,$sql_query);
             echo "<table border=1 width=400 cellpadding=5>";
-            
-
             echo "<tr>";
 
             for($i=0;$i<mysqli_num_fields($result);$i++) {
@@ -61,12 +60,13 @@
             echo "</table>";
         }
         else{
-        echo"登入失敗";
+            // require("to_mysql_use.php");
         }
     }
     elseif($dowhat=="查詢"){
-        echo"<form method='POST' action='mysql_choose.php'>";
         if($list!=" "){
+            echo"<form method='POST' action='mysql_choose.php'>";
+        
             $sql_query="SELECT * FROM $list";
             $result=mysqli_query($db_link,$sql_query);
         
@@ -84,24 +84,28 @@
                 echo '<td><input type="text" name="'.$i.'"></input></td>';
             }
             echo"</tr>";
-            echo "</table><button>查詢</button></from><br>";
+            echo "</table><button>查詢</button>";
+            echo"<button type=button onclick="."document.location.href='wait.php'".">取消</button></from><br>";
         }
-        else{require("to_mysql_use.php");}
+        else{
+            // require("to_mysql_use.php");
+        }
     }
 
     elseif($dowhat=="新增"){
-        $a1=mysqli_query($db_link,"DESCRIBE $list");
-        
-        $a2=0;
-        while($row=mysqli_fetch_row($a1)){
-            $a2++;
-            
-            $a3[$a2]=$row;
-            
-        }
-
-        echo"<form method='POST' action='mysql_new.php'>";
         if($list!=" "){
+            $a1=mysqli_query($db_link,"DESCRIBE $list");
+            
+            $a2=0;
+            while($row=mysqli_fetch_row($a1)){
+                $a2++;
+                
+                $a3[$a2]=$row;
+                
+            }
+
+            echo"<form method='POST' action='mysql_new.php'>";
+        
             $sql_query="SELECT * FROM $list";
             $result=mysqli_query($db_link,$sql_query);
         
@@ -136,10 +140,12 @@
             echo "<button type=button onclick="."document.location.href='wait.php'".">取消</button></from><br>";
             
         }
-        else{require("to_mysql_use.php");}
+        else{
+            // require("to_mysql_use.php");
+        }
     }
     if($dowhat=="刪除"){
-        if($list!=""){
+        if($list!=" "){
             $sql_query="SELECT * FROM $list";
             $result=mysqli_query($db_link,$sql_query);
             echo"<form method='POST' action='mysql_del.php'>";
@@ -173,7 +179,7 @@
             echo "<button type=button onclick="."document.location.href='wait.php'".">取消</button></from><br>";
         }
         else{
-            require("to_mysql_use.php");
+            // require("to_mysql_use.php");
         }
     }
     // elseif($dowhat=="更新"){
